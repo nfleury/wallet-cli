@@ -8,6 +8,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: "io.spring.dependency-management"
 apply plugin: "com.liferay.node"
 apply plugin: 'application'
+apply plugin: 'maven-publish'
 
 sourceCompatibility = 1.8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -19,6 +20,24 @@ compileJava.options*.compilerArgs = [
         "-Xlint:path", "-Xlint:static", "-Xlint:try", "-Xlint:fallthrough",
         "-Xlint:deprecation", "-Xlint:unchecked", "-Xlint:-options"
 ]
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact sourceJar
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
+}
+
+task sourceJar(type: Jar, dependsOn: classes) {
+    classifier 'sources'
+    from sourceSets.main.allSource
+}
+
 
 repositories {
     mavenLocal()
